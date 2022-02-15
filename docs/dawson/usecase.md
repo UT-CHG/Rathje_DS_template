@@ -1,54 +1,91 @@
-# TITLE for Use Case Documentation Page
+# Using ADCIRC and HPC workflows for Ensemble Modeling in DesignSafe 
 
-**Authors, Affiliations**  
+**Clint Dawson, University of Texas at Austin**  
+**Carlos del-Castillo-Negrete, University of Texas at Austin**  
+**Benjamin Pachev, University of Texas at Austin**  
 
-Introductory Text.  High-level overview of product. A condimentum vitae sapien pellentesque habitant morbi tristique.
+The following use case presents an example of how to leverage the Tapis API DesignSafe is built off of to run a complex HPC workflow. The specific workflow to be presented consists of running ADCIRC, a storm-surge modeling application available on DesignSafe, using the parametric job launcher utility known as pylauncher. All code and examples presented are meant to be be executed from a Jupyter Notebook on the DesignSafe platform and using a DesignSafe account to make Tapis API calls. 
+
+[Jupyter notebooks on DS Juypterhub](https://www.designsafe-ci.org/rw/workspace/#!/Jupyter::Analysis)<br/>
+The rest of this documentation is laid out as follows:
+
 
 ## Background 
 
 ### Citation and Licensing
 
-* Please cite [AUTHORS et al. (20xx) - example of published project](https://doi.org/10.17603/ds2-3zdj-493) to acknowledge the use of any resources from this use case.
+* Please cite [Dawson et al. (2021)](https://doi.org/10.17603/ds2-68a9-0s64) if using any of the Texas FEMA Hurricane data used in the examples below. 
 
 * Please cite [Rathje et al. (2017)](https://doi.org/10.1061/(ASCE)NH.1527-6996.0000246) to acknowledge the use of DesignSafe resources.  
 
 * This software is distributed under the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.html).  
 
-### Description 
+### ADCIRC
 
-Enim ut sem viverra aliquet.  Nisi scelerisque eu ultrices vitae auctor. Scelerisque viverra mauris in aliquam.  Ut morbi tincidunt augue interdum velit euismod in pellentesque massa. Sagittis purus sit amet volutpat consequat mauris nunc congue nisi. Sed adipiscing diam donec adipiscing tristique.  In pellentesque massa placerat duis. Tortor condimentum lacinia quis vel eros donec ac. Sed velit dignissim sodales ut eu sem. Adipiscing elit duis tristique sollicitudin nibh sit amet commodo. Quis risus sed vulputate odio ut.
+TODO: Finish Brief ADCIRC overview and links to further resources:
+
+ADCIRC Resources:
+
+* [Link Example - this goes to Google](https://www.google.com)
+
+#### Shallow Water Equations
+
+Depth-averaged barotropic form of the Shallow Water Equations:
+<center>
+```math
+$$
+\frac{\partial \zeta}{\partial t} + \nabla \cdot (\mathbf{U} H) = 0,
+$$
+
+$$
+\frac{\partial \mathbf{U}}{\partial t} + \mathbf{U} \cdot \nabla \mathbf{U} +
+f \mathbf{k} \times \mathbf{U} = -\nabla\left[ \frac{p_s}{\rho_0} + g\zeta\right] +
+\frac{\boldsymbol\tau_s - \boldsymbol\tau_b}{\rho_0 H},
+$$
+```
+
+Where we have:
+
+  * $\zeta=\zeta(x, y, t)$ = water surface elevation with respect to mean sea level
+  * $\mathbf{U} = \mathbf{U}(x, y, t)$ the depth-averaged velocity (averaged over the height of the water column)
+  * $f$ = Coriolis parameter, $\mathbf{k}$ = ___
+  * $p_s$ = atmospheric pressure, $g$ = gravitational constant, $\rho_0$ = reference density of water
+  * $\boldsymbol\tau_s$ = surface stress, $\boldsymbol\tau_b$ = bottom stress, $H$ = height of the water column
+
+
+### Tapis
+
+TODO: Brief Tapis overview with links to more resources and tutorials/docs:
 
 [Link Example - this goes to Google](https://www.google.com)
 
-## Header 2
+## Simple ADCIRC run using Tapis
 
-Euismod nisi porta lorem mollis aliquam ut. Tincidunt ornare massa eget egestas purus viverra accumsan in. Varius quam quisque id diam vel. Fermentum odio eu feugiat pretium nibh ipsum consequat nisl. Placerat duis ultricies lacus sed turpis tincidunt id aliquet risus. Condimentum vitae sapien pellentesque habitant morbi tristique senectus et netus. Egestas sed sed risus pretium quam vulputate. Posuere morbi leo urna molestie at elementum. Eget magna fermentum iaculis eu non diam. Nisl tincidunt eget nullam non nisi. Sit amet risus nullam eget felis eget nunc lobortis mattis.
+This section will contain info about how to run a simple ADCIRC run that and visualize some outputs
 
-### Header2 Subheading
+Overview:
 
-In aliquam sem fringilla ut morbi. Interdum varius sit amet mattis vulputate enim nulla aliquet. Sit amet mattis vulputate enim nulla.  In egestas erat imperdiet sed euismod nisi porta lorem. Eget nulla facilisi etiam dignissim diam.  Facilisi cras fermentum odio eu feugiat. Velit aliquet sagittis id consectetur. Vel quam elementum pulvinar etiam.  Ut diam quam nulla porttitor massa id neque aliquam. Sodales ut etiam sit amet nisl.  Scelerisque varius morbi enim nunc faucibus a. Sit amet volutpat consequat mauris nunc. Et leo duis ut diam.
+* Set-up
+* Tapis Configuration
+* Submitting and monitoring
+* Getting and visualizing output
 
-*Add images to the folder img and use relative path to specify the location of the image.*   
+### Configuring input and exeuctables
 
-![caption](img/mkdocs-template.png)
-> Use case template design
+TODO: Quick overview on optiosn for inptus and executables. For now use default examples available on either DesignSafe (How to update these?) and/or hurrican storm-surge project.
 
+### Configuring Tapis Job
 
-## Header3
+TODO: Configuring job json input
 
-Morbi tristique senectus et netus et. Tristique senectus et netus et malesuada fames.  Eu mi bibendum neque egestas congue quisque. Id consectetur purus ut faucibus pulvinar elementum integer enim. Nunc consequat interdum varius sit amet mattis vulputate enim nulla.  Porta nibh venenatis cras sed felis eget. Dui id ornare arcu odio ut sem nulla pharetra diam. Pellentesque habitant morbi tristique senectus et netus et. Commodo nulla facilisi nullam vehicula ipsum a arcu. Nisi porta lorem mollis aliquam ut porttitor leo.
+**ADCIRC Job Configurations**
 
-Numbered list 
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Stampede2| CPU      | 2017     |     
+| Frontera | CPU & GPU| 2019     |     
 
-1. [numbered linked item](https://maps.google.com)
-2. second item
-3. third item
-
-### Header3 subheading
-
-Ac feugiat sed lectus vestibulum mattis ullamcorper. Et egestas quis ipsum suspendisse ultrices gravida dictum fusce ut. Scelerisque eu ultrices vitae auctor eu augue ut lectus arcu.  Imperdiet proin fermentum leo vel orci porta non pulvinar. Dictumst quisque sagittis purus sit amet. Aliquam purus sit amet luctus. Aliquet bibendum enim facilisis gravida neque convallis a cras. Orci porta non pulvinar neque laoreet suspendisse. Urna neque viverra justo nec ultrices dui.
-
-**Example Table**
+**Tapis HPC Configurations**
 
 | Column 1 | Column 2 | Column 3 |
 |----------|----------|----------|
@@ -57,33 +94,40 @@ Ac feugiat sed lectus vestibulum mattis ullamcorper. Et egestas quis ipsum suspe
 
 Or use markdown table generator: [https://www.tablesgenerator.com/markdown_tables](https://www.tablesgenerator.com/markdown_tables)
 
+### Submitting and Monitoring Job
 
-### Math
+TODO: Finish section on submitting and monitoring tapis job. common errors?
 
-To generate math equations in markdown.
+### Downloading and visualizing output
 
-For inline mode formulas: $`a^2+b^2=c^2`$.
+TODO: Getting and visualizing output, Python and figuregen outputs
 
-For display mode formulas which appear on a separate line
-```math
-f(x) = \int_{-\infty}^\infty
-\hat f(\xi)\,e^{2 \pi i \xi x}
-\,d\xi
-```
+*Add images to the folder img and use relative path to specify the location of the image.*   
 
-### Code
+![caption](img/mkdocs-template.png)
+> Use case template design
 
-``` python
-import tensorflow as tf
-```
+## Pylauncher - Running an Ensemble of ADCIRC Runs
 
-Highlight specific lines of the code
+TODO: Finish Section
 
-``` python hl_lines="3 4"
-""" Bubble sort """
-def bubble_sort(items):
-    for i in range(len(items)):
-        for j in range(len(items) - 1 - i):
-            if items[j] > items[j + 1]:
-                items[j], items[j + 1] = items[j + 1], items[j]
-```
+Numbered list 
+
+1. [numbered linked item](https://maps.google.com)
+2. second item
+3. third item
+
+
+### Pylauncher Background
+
+TODO: Pylauncher info and background
+
+### Configuring Job
+
+### Running and Monitoring
+
+### Post-Processing: Summarizing Output
+
+## Pylauncher - General Purpose Ensemble Simulations
+
+TODO: Finish Section
