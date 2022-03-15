@@ -4,19 +4,11 @@
 **Carlos del-Castillo-Negrete, University of Texas at Austin**  
 **Benjamin Pachev, University of Texas at Austin**  
 
-The following use case presents an example of how to leverage the Tapis API to run an ensemble of HPC simulations. The specific workflow to be presented consists of running ADCIRC, a storm-surge modeling application available on DesignSafe, using the parametric job launcher utility known as pylauncher. All code and examples presented are meant to be be executed from a Jupyter Notebook on the DesignSafe platform and using a DesignSafe account to make Tapis API calls. 
+The following use case presents an example of how to leverage the Tapis API to run an ensemble of HPC simulations. The specific workflow to be presented consists of running ADCIRC, a storm-surge modeling application available on DesignSafe, using the parametric job launcher pylauncher. All code and examples presented are meant to be be executed from a Jupyter Notebook on the DesignSafe platform and using a DesignSafe account to make Tapis API calls. Accompanying notebooks for this use case can be found in the ADCIRC folder in [Community Data](https://www.designsafe-ci.org/data/browser/public/designsafe.storage.community/Use%20Case%20Products).
 
-[Jupyter notebooks on DS Juypterhub](https://www.designsafe-ci.org/rw/workspace/#!/Jupyter::Analysis)<br/>
+Learn more: [Jupyter notebooks on DS Juypterhub](https://www.designsafe-ci.org/rw/workspace/#!/Jupyter::Analysis).
 
 ## Background 
-
-General libraries we will use:
-
-```python
-from pathlib import Path
-import json
-import os
-```
 
 ### Citation and Licensing
 
@@ -36,12 +28,6 @@ For more information on running ADCIRC and documentation, see the following link
 ADCIRC is available as a standalone app accesible via the DesignSafe front-end at ()
 
 ADCIRC files used in this demo are pre-staged on TACC resources that DesignSafe execution systems have access to, at the path `/work/06307/clos21/pub/adcirc`. See the section on using data from Projects directory for using other data sources.
-
-For interacting with ADCIRC output data we will primarily use the xarray library:
-
-```python
-import xarray as xa
-```
 
 ### Tapis
 
@@ -97,11 +83,16 @@ Note that for large scale ensemble s
 
 This section will contain info about how to run a simple ADCIRC run using the pylauncher app. This example has an accompanying notebook in the [ADCIRC Use Case folder](https://www.designsafe-ci.org/data/browser/public/designsafe.storage.community/Use%20Case%20Products/ADCIRC) in the Community Data directory, called ADCIRC-Simple
 
+We will run ADCIRC on the [Shinnecock Inlet Test Grid](https://adcirc.org/home/documentation/example-problems/shinnecock-inlet-ny-with-tidal-forcing-example/).
+
+![caption](img/si_inlet.png)
+> Shinnecock Inlet Test Grid. ADCIRC solves the Shallow Water Equations over a Triangular Mesh, depicted above. On the right we see one of the stations, station 2, we will be analyzing output for.
+
 #### Staging Inputs
 
 Input directory contains the following files for running
 
-* setup.sh - Setup script to run before running any ensemble jobs. Sets up runs and logs directory.
+* setup.sh - Setup script to run before running any ensemble jobs. Sets up runs and logs directory, which is redundant in this case since we are only running a singular run.
 * generator.sh - Generator entry point script. Calls the python function.
 * generator.py - Python generator function with a basic generator for configuring an ensemble of ADCIRC runs.
 * post_process.sh - Script to run per-job to set-up each ADCIRC run using adcprep.
@@ -151,7 +142,6 @@ adcirc_config['parameters'] = {'pylauncher_input': 'jobs_list.json',
 job = ag.jobs.submit(body=adcirc_config)
 ```
 
-
 #### Monitoring Job 
 
 We can get our jobs status by using the `getStatus` command. Note we must wait for it to reach a `FINISHED` state, after archiving, to analyze outputs.
@@ -175,16 +165,33 @@ job = ag.jobs.get(jobId=job['id'])
 job_archive_path = Path(prefix) / Path(job['archivePath']).relative_to('clos21')
 ```
 
-TODO: Getting and visualizing output, Python and figuregen outputs
+For interacting with ADCIRC output data we will primarily use the xarray library:
 
-*Add images to the folder img and use relative path to specify the location of the image.*   
+```python
+import xarray as xa
 
-![caption](img/si_ts.png)
-> Use case template design
+f61 = xa.load_dataset(job_archive_path / 'outputs' / 'job_1.61.nc')
+f61
+```
+
+We should see an xarray structure looking something like:
+
+![caption](img/f61_xarray.png)
+> Example ADCIRC time-series xarray data-structure
+
+We can quickly plot using xarray's native plotting capabilities:
+
+```python
+f61.isel(station=2)['zeta'].plot()
+```
+
+![caption](img/si_tides_ts.png)
+> Example ADCIRC time-series output, this example contains tide only forcing, so we see a pretty basic periodic signal.
 
 #### Analyzing Logs
 
-TODO: Section to include what to do when things go wrong
+Log files for each job are stored in the `logs/` directory of any job, and are saved per job. They can also be loaded conveniently using pandas:
+
 
 ## Ensemble of ADCIRC Runs
 
