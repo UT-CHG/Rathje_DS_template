@@ -4,13 +4,19 @@
 **Carlos del-Castillo-Negrete, University of Texas at Austin**  
 **Benjamin Pachev, University of Texas at Austin**  
 
-The following use case presents an example of how to leverage the Tapis API DesignSafe is built off of to run a complex HPC workflow. The specific workflow to be presented consists of running ADCIRC, a storm-surge modeling application available on DesignSafe, using the parametric job launcher utility known as pylauncher. All code and examples presented are meant to be be executed from a Jupyter Notebook on the DesignSafe platform and using a DesignSafe account to make Tapis API calls. 
+The following use case presents an example of how to leverage the Tapis API to run an ensemble of HPC simulations. The specific workflow to be presented consists of running ADCIRC, a storm-surge modeling application available on DesignSafe, using the parametric job launcher utility known as pylauncher. All code and examples presented are meant to be be executed from a Jupyter Notebook on the DesignSafe platform and using a DesignSafe account to make Tapis API calls. 
 
 [Jupyter notebooks on DS Juypterhub](https://www.designsafe-ci.org/rw/workspace/#!/Jupyter::Analysis)<br/>
-The rest of this documentation is laid out as follows:
-
 
 ## Background 
+
+General libraries we will use:
+
+```python
+from pathlib import Path
+import json
+import os
+```
 
 ### Citation and Licensing
 
@@ -22,83 +28,152 @@ The rest of this documentation is laid out as follows:
 
 ### ADCIRC
 
-TODO: Finish Brief ADCIRC overview and links to further resources:
+For more information on running ADCIRC and documentation, see the following links:
 
-ADCIRC Resources:
+* [ADCIRC Wiki](https://wiki.adcirc.org/wiki/Main_Page)
+* [ADCIRC Web Page](https://adcirc.org/)
 
-* [Link Example - this goes to Google](https://www.google.com)
+ADCIRC is available as a standalone app accesible via the DesignSafe front-end at ()
 
-#### Shallow Water Equations
+ADCIRC files used in this demo are pre-staged on TACC resources that DesignSafe execution systems have access to, at the path `/work/06307/clos21/pub/adcirc`. See the section on using data from Projects directory for using other data sources.
 
-Depth-averaged barotropic form of the Shallow Water Equations:
-<center>
-```math
-$$
-\frac{\partial \zeta}{\partial t} + \nabla \cdot (\mathbf{U} H) = 0,
-$$
+For interacting with ADCIRC output data we will primarily use the xarray library:
 
-$$
-\frac{\partial \mathbf{U}}{\partial t} + \mathbf{U} \cdot \nabla \mathbf{U} +
-f \mathbf{k} \times \mathbf{U} = -\nabla\left[ \frac{p_s}{\rho_0} + g\zeta\right] +
-\frac{\boldsymbol\tau_s - \boldsymbol\tau_b}{\rho_0 H},
-$$
+```python
+import xarray as xa
 ```
-
-Where we have:
-
-  * $\zeta=\zeta(x, y, t)$ = water surface elevation with respect to mean sea level
-  * $\mathbf{U} = \mathbf{U}(x, y, t)$ the depth-averaged velocity (averaged over the height of the water column)
-  * $f$ = Coriolis parameter, $\mathbf{k}$ = ___
-  * $p_s$ = atmospheric pressure, $g$ = gravitational constant, $\rho_0$ = reference density of water
-  * $\boldsymbol\tau_s$ = surface stress, $\boldsymbol\tau_b$ = bottom stress, $H$ = height of the water column
-
 
 ### Tapis
 
-TODO: Brief Tapis overview with links to more resources and tutorials/docs:
+Tapis is the main API to control and access HPC resources with. For more resources and tutorials on how to use Tapis, see the following:
 
-[Link Example - this goes to Google](https://www.google.com)
+- [Tapis CLI](https://tapis-cli.readthedocs.io/en/latest/contents.html)
+* [AgavePy](https://tacc-cloud.readthedocs.io/projects/agave/en/latest/)
+* [DesignSafe Webinar](https://www.youtube.com/watch?v=-_1lNWW8CAg&t=1854s&ab_channel=NHERIDesignSafe-CIMedia)
 
-## Simple ADCIRC run using Tapis
+To initialize tapis in our jupyter notebook we use AgavePy. Relies on `tapis auth init --interactive` being run from CLI first.
 
-This section will contain info about how to run a simple ADCIRC run that and visualize some outputs
+```python
+from agavepy.agave import Agave
 
-Overview:
+ag = Agave.restore()
+```
 
-* Set-up
+### Pylauncher
+
+Pylauncher is a parametric job launcher used for launching a collection of HPC jobs within one HPC job. By specifying a list of jobs to execute in either a CSV or json file, pylauncher manages resources on a given HPC job to execute all the jobs using the given nodes. Inputs for pylauncher look something like (for csv files, per line):
+
+```
+num_processes,<pre process command>;<main parallel command>;<post process command>
+```
+
+The pre-process and post-process commands are executed in serial, while the main command is executed in parallel using the appropriate number of processes. Note pre and post process commands should do light file management and movement and no heavy lifting/operations.
+
+## Tapis Pylauncher App
+
+The pylauncher app is the main application we will be using to run ensemble simulations. It serves as a wrapper around the [TACC pylauncher](https://github.com/TACC/pylauncher) utility. 
+
+Email cdelcastillo21@gmail.com for access to the application, or check out the application from the github page - https://github.com/UT-CHG/tapis-pylauncher and deploy it using either the Tapis CLI or AgavePy (See documentation links above under Tapis section).
+
+Overview of this section:
+
 * Tapis Configuration
 * Submitting and monitoring
 * Getting and visualizing output
 
-### Configuring input and exeuctables
+### Basic Inputs Overview - Generator Script
 
-TODO: Quick overview on optiosn for inptus and executables. For now use default examples available on either DesignSafe (How to update these?) and/or hurrican storm-surge project.
+Inputs for a pylauncher ensemble run will consist of a zipped file full of the necessary scripts to run configure the pylauncher ensemble run. 
 
-### Configuring Tapis Job
+* generator.sh - 
 
-TODO: Configuring job json input
 
-**ADCIRC Job Configurations**
+### Staging Files 
 
-| Column 1 | Column 2 | Column 3 |
-|----------|----------|----------|
-| Stampede2| CPU      | 2017     |     
-| Frontera | CPU & GPU| 2019     |     
+Note that for large scale ensemble s
 
-**Tapis HPC Configurations**
 
-| Column 1 | Column 2 | Column 3 |
-|----------|----------|----------|
-| Stampede2| CPU      | 2017     |     
-| Frontera | CPU & GPU| 2019     |     
+### Simple ADCIRC run using Tapis
 
-Or use markdown table generator: [https://www.tablesgenerator.com/markdown_tables](https://www.tablesgenerator.com/markdown_tables)
+This section will contain info about how to run a simple ADCIRC run using the pylauncher app. This example has an accompanying notebook in the [ADCIRC Use Case folder](https://www.designsafe-ci.org/data/browser/public/designsafe.storage.community/Use%20Case%20Products/ADCIRC) in the Community Data directory, called ADCIRC-Simple
 
-### Submitting and Monitoring Job
+#### Staging Inputs
 
-TODO: Finish section on submitting and monitoring tapis job. common errors?
+Input directory contains the following files for running
 
-### Downloading and visualizing output
+* setup.sh - Setup script to run before running any ensemble jobs. Sets up runs and logs directory.
+* generator.sh - Generator entry point script. Calls the python function.
+* generator.py - Python generator function with a basic generator for configuring an ensemble of ADCIRC runs.
+* post_process.sh - Script to run per-job to set-up each ADCIRC run using adcprep.
+* pre_process.sh - Script to run per-job after each ADCIRC run to move outputs and logs to appropriate directories and cleanup.
+
+The generator script for our case doe
+
+Note we have to first zip up the containing directory since the application expects a zipped input:
+
+```python
+adcirc_job_dir = job_configs / 'adcirc' 
+input_zip = job_configs / 'adcirc.zip'
+input_zip.unlink(missing_ok=True)
+os.system(f"zip -r {str(input_zip)} {str(adcirc_job_dir)}")
+input_zip
+```
+
+
+#### Configuring and Submitting Job
+
+The python job configuration looks like:
+
+```python
+base_dir = '/work2/06307/clos21/pub/adcirc/inputs/ShinnecockInlet/nodal/GD-WindMult_WindJan2018_CFSv2_12'
+runs_dir = base_dir
+execs_dir = '/work2/06307/clos21/pub/adcirc/execs/stampede2/v55_nodal_beta'
+cores_per_job = 8
+write_proc_per_job = 0
+generator_args = f"{base_dir}  {execs_dir}"
+generator_args += f" --cores_per_job {cores_per_job} --write_proc_per_job {write_proc_per_job}"
+
+
+adcirc_config = {}
+adcirc_config['name'] = 'adcirc_simple'
+adcirc_config['appId'] =  'pylauncher-test-0.0.1'
+adcirc_config['nodeCount'] = 1
+adcirc_config['processorsPerNode'] =  10
+adcirc_config['memoryPerNode'] = '1'
+adcirc_config['maxRunTime'] = '00:30:00'
+adcirc_config['archive'] = True
+adcirc_config['archiveOnAppError'] = True
+adcirc_config['inputs'] = {'job_inputs': configs_uri + '/adcirc.zip'}
+adcirc_config['parameters'] = {'pylauncher_input': 'jobs_list.json',
+                               'generator_args': generator_args}
+
+
+job = ag.jobs.submit(body=adcirc_config)
+```
+
+
+#### Monitoring Job 
+
+We can get our jobs status by using the `getStatus` command. Note we must wait for it to reach a `FINISHED` state, after archiving, to analyze outputs.
+
+```python
+ag.jobs.getStatus(jobId=job['id'])
+```
+
+And look at job directory files as they execute to monitory them:
+
+```
+output_files = [f['name'] for f in ag.jobs.listOutputs(filePath='outputs', jobId=job['id'])]
+```
+
+#### Output
+
+Once the job reaches the archived state, we can see the archive path of the job, which should be accessible from our notebook.
+
+```pyhton
+job = ag.jobs.get(jobId=job['id'])
+job_archive_path = Path(prefix) / Path(job['archivePath']).relative_to('clos21')
+```
 
 TODO: Getting and visualizing output, Python and figuregen outputs
 
@@ -107,7 +182,7 @@ TODO: Getting and visualizing output, Python and figuregen outputs
 ![caption](img/mkdocs-template.png)
 > Use case template design
 
-## Pylauncher - Running an Ensemble of ADCIRC Runs
+## Ensemble of ADCIRC Runs
 
 TODO: Finish Section
 
