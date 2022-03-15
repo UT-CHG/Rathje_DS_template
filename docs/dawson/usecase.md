@@ -85,7 +85,7 @@ This section will contain info about how to run a simple ADCIRC run using the py
 
 We will run ADCIRC on the [Shinnecock Inlet Test Grid](https://adcirc.org/home/documentation/example-problems/shinnecock-inlet-ny-with-tidal-forcing-example/).
 
-![caption](img/si_inlet.png)
+![caption](img/si_mesh.png)
 > Shinnecock Inlet Test Grid. ADCIRC solves the Shallow Water Equations over a Triangular Mesh, depicted above. On the right we see one of the stations, station 2, we will be analyzing output for.
 
 #### Staging Inputs
