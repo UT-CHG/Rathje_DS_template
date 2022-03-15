@@ -166,7 +166,7 @@ And look at job directory files as they execute to monitory them:
 output_files = [f['name'] for f in ag.jobs.listOutputs(filePath='outputs', jobId=job['id'])]
 ```
 
-#### Output
+#### Getting Job Output
 
 Once the job reaches the archived state, we can see the archive path of the job, which should be accessible from our notebook.
 
@@ -179,30 +179,34 @@ TODO: Getting and visualizing output, Python and figuregen outputs
 
 *Add images to the folder img and use relative path to specify the location of the image.*   
 
-![caption](img/mkdocs-template.png)
+![caption](img/si_ts.png)
 > Use case template design
+
+#### Analyzing Logs
+
+TODO: Section to include what to do when things go wrong
 
 ## Ensemble of ADCIRC Runs
 
-TODO: Finish Section
+In this section we will review how to execute an ensemble run of a larger set of files. We will also go over how to use files that are staged in a Project directory. 
 
-Numbered list 
+We will use as a model data set the [Texas FEMA Synthetic Storm Data Set](https://www.designsafe-ci.org/data/browser/projects/5832364376574324245-242ac116-0001-012/)
 
-1. [numbered linked item](https://maps.google.com)
-2. second item
-3. third item
-
-
-### Pylauncher Background
-
-TODO: Pylauncher info and background
 
 ### Configuring Job
 
+TODO: Configuring Ensemble run
+
 ### Running and Monitoring
+
+TODO: Running and Monitoring Ensemble runs. Cover doing smaller batches.
 
 ### Post-Processing: Summarizing Output
 
-## Pylauncher - General Purpose Ensemble Simulations
+TODO: Post-process ensemble run into figure of time-series.
+
+## General Purpose Ensemble Simulations 
+
+TODO: Shell demo of how to build a general-purpose ensemble simulator
 
 TODO: Finish Section
