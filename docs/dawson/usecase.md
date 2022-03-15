@@ -1,4 +1,4 @@
-# Using ADCIRC and HPC workflows for Ensemble Modeling in DesignSafe 
+# ADCIRC Use Case - Using Tapis and Pylauncher for Ensemble Modeling in DesignSafe 
 
 **Clint Dawson, University of Texas at Austin**  
 **Carlos del-Castillo-Negrete, University of Texas at Austin**  
