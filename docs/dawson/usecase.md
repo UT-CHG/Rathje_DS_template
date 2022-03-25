@@ -183,16 +183,42 @@ Note that the `base_dir` and `execs_dir` are paths on TACC systems that should b
 
 #### Monitoring Job 
 
-We can get our jobs status by using the `getStatus` command. Note we must wait for it to reach a `FINISHED` state, after archiving, to analyze outputs.
+We can get our jobs status by using the `getStatus` command. 
 
 ```python
 ag.jobs.getStatus(jobId=job['id'])
 ```
 
-And look at job directory files as they execute to monitory them:
+Note we must wait for it to reach a `FINISHED` state, after archiving, to download outputs.
 
+
+```python
+{'id': 'e64c31e9-598e-4c52-9e29-5d36292fa1a3-007',
+ 'status': 'FINISHED',
+ '_links': {'self': {'href': 'https://agave.designsafe-ci.org/jobs/v2/e64c31e9-598e-4c52-9e29-5d36292fa1a3-007'}}}
 ```
-output_files = [f['name'] for f in ag.jobs.listOutputs(filePath='outputs', jobId=job['id'])]
+
+But we can look at the job directory files as they execute to monitor how the job is doing. For example, we can look at the runs directory to see what runs have been started:
+
+```python
+[f for f in ag.jobs.listOutputs(filePath='runs', jobId=job['id'])]
+```
+
+We should see a list of dictionaries such as:
+
+```python
+[{'name': 'job_1',
+  'path': 'runs/job_1',
+  'lastModified': datetime.datetime(2022, 3, 15, 18, 54, 50, tzinfo=tzlocal()),
+  'length': 4096,
+  'owner': '?',
+  'permission': 'READ_WRITE',
+  'mimeType': 'text/directory',
+  'format': 'folder',
+  'type': 'dir',
+  '_links': {'self': {'href': 'https://agave.designsafe-ci.org/jobs/v2/12a21b19-4b5b-4fbc-bc0a-dc25b0d7367f-007/outputs/media/runs/job_1'},
+   'system': {'href': 'https://agave.designsafe-ci.org/systems/v2/designsafe.storage.default'},
+   'parent': {'href': 'https://agave.designsafe-ci.org/jobs/v2/12a21b19-4b5b-4fbc-bc0a-dc25b0d7367f-007'}}}]
 ```
 
 #### Getting Job Output
