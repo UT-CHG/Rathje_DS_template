@@ -4,7 +4,7 @@
 **Carlos del-Castillo-Negrete, University of Texas at Austin**  
 **Benjamin Pachev, University of Texas at Austin**  
 
-The following use case presents an example of how to leverage the Tapis API to run an ensemble of HPC simulations. The specific workflow to be presented consists of running ADCIRC, a storm-surge modeling application available on DesignSafe, using the parametric job launcher pylauncher. All code and examples presented are meant to be be executed from a Jupyter Notebook on the DesignSafe platform and using a DesignSafe account to make Tapis API calls. Accompanying notebooks for this use case can be found in the ADCIRC folder in [Community Data](https://www.designsafe-ci.org/data/browser/public/designsafe.storage.community/Use%20Case%20Products).
+The following use case presents an example of how to leverage the Tapis API to run an ensemble of HPC simulations. The specific workflow to be presented consists of running ADCIRC, a storm-surge modeling application available on DesignSafe, using the parametric job launcher pylauncher. All code and examples presented are meant to be be executed from a Jupyter Notebook on the DesignSafe platform and using a DesignSafe account to make Tapis API calls. Accompanying notebooks for this use case can be found in the ADCIRC folder in [Community Data](https://www.designsafe-ci.org/data/browser/public/designsafe.storage.community/Use%20Case%20Products/ADCIRC).
 
 Learn more: [Jupyter notebooks on DS Juypterhub](https://www.designsafe-ci.org/rw/workspace/#!/Jupyter::Analysis).
 
@@ -16,7 +16,7 @@ Learn more: [Jupyter notebooks on DS Juypterhub](https://www.designsafe-ci.org/r
 
 * Please cite [Rathje et al. (2017)](https://doi.org/10.1061/(ASCE)NH.1527-6996.0000246) to acknowledge the use of DesignSafe resources.  
 
-* This software is distributed under the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.html).  
+* This software is distributed under the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.html).  
 
 ### ADCIRC
 
@@ -59,7 +59,7 @@ The pre-process and post-process commands are executed in serial, while the main
 
 The pylauncher app is the main application we will be using to run ensemble simulations. It serves as a wrapper around the [TACC pylauncher](https://github.com/TACC/pylauncher) utility. 
 
-Check out the application from the github page - https://github.com/UT-CHG/tapis-pylauncher and deploy it using either the Tapis CLI or AgavePy (See documentation links above under Tapis section), or email cdelcastillo21@gmail.com for access to an already deployed version of the application (it is not a public application yet, so has to be shared explicitly with users).
+Check out the application from the github page - [https://github.com/UT-CHG/tapis-pylauncher](https://github.com/UT-CHG/tapis-pylauncher) and deploy it using either the Tapis CLI or AgavePy (See documentation links above under Tapis section), or email cdelcastillo21@gmail.com for access to an already deployed version of the application (it is not a public application yet, so has to be shared explicitly with users).
 
 Overview of this section:
 
@@ -106,7 +106,7 @@ Inputs for a pylauncher ensemble run will consist of a zipped file full of the n
 
 For large scale ensemble simulations, it is best to stage files in a project directory that execution systems can access before-hand so that Tapis itself isn't doing the moving and staging of data. 
 
-The corresponding TACC base path to your project with a particular id can be found at `/corral-repl/projects/NHERI/projects/[id]/`. To find the ID for your project, you can just look at the ULR of your project directory in designsafe:
+The corresponding TACC base path to your project with a particular id can be found at `/corral-repl/projects/NHERI/projects/[id]/`. To find the ID for your project, you can just look at the URL of your project directory in designsafe:
 
 
 ![caption](img/project_dir.png)
