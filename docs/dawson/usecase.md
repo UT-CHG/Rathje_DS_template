@@ -39,7 +39,7 @@ Tapis is the main API to control and access HPC resources with. For more resourc
 
 To initialize tapis in our jupyter notebook we use AgavePy. Relies on `tapis auth init --interactive` being run from CLI first.
 
-![caption](img/TapisAuthInit.png)
+![caption](img/TapisImage.png)
 > Initialize Tapis from within a shell in a jupyter session. A shell can be launched by going to File -> New -> Terminal.
 
 ```python
