@@ -1,89 +1,166 @@
-# TITLE for Use Case Documentation Page
+# ADCIRC Use Case - Using Tapis and Pylauncher for Ensemble Modeling in DesignSafe 
 
-**Authors, Affiliations**  
+**Clint Dawson, University of Texas at Austin**  
+**Carlos del-Castillo-Negrete, University of Texas at Austin**  
+**Benjamin Pachev, University of Texas at Austin**  
 
-Introductory Text.  High-level overview of product. A condimentum vitae sapien pellentesque habitant morbi tristique.
+The following use case presents an example of how to leverage the Tapis API to run an ensemble of HPC simulations. The specific workflow to be presented consists of running ADCIRC, a storm-surge modeling application available on DesignSafe, using the parametric job launcher pylauncher. All code and examples presented are meant to be be executed from a Jupyter Notebook on the DesignSafe platform and using a DesignSafe account to make Tapis API calls. Accompanying jupyter notebooks for this use case can be found in the ADCIRC folder in [Community Data](https://www.designsafe-ci.org/data/browser/public/designsafe.storage.community/Use%20Case%20Products/ADCIRC).
+
+Learn more: [Jupyter notebooks on DS Juypterhub](https://www.designsafe-ci.org/rw/workspace/#!/Jupyter::Analysis).
 
 ## Background 
 
 ### Citation and Licensing
 
-* Please cite [AUTHORS et al. (20xx) - example of published project](https://doi.org/10.17603/ds2-3zdj-493) to acknowledge the use of any resources from this use case.
-
 * Please cite [Rathje et al. (2017)](https://doi.org/10.1061/(ASCE)NH.1527-6996.0000246) to acknowledge the use of DesignSafe resources.  
 
-* This software is distributed under the GNU General Public License (https://www.gnu.org/licenses/gpl-3.0.html).  
+* This software is distributed under the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.html).  
 
-### Description 
+### ADCIRC
 
-Enim ut sem viverra aliquet.  Nisi scelerisque eu ultrices vitae auctor. Scelerisque viverra mauris in aliquam.  Ut morbi tincidunt augue interdum velit euismod in pellentesque massa. Sagittis purus sit amet volutpat consequat mauris nunc congue nisi. Sed adipiscing diam donec adipiscing tristique.  In pellentesque massa placerat duis. Tortor condimentum lacinia quis vel eros donec ac. Sed velit dignissim sodales ut eu sem. Adipiscing elit duis tristique sollicitudin nibh sit amet commodo. Quis risus sed vulputate odio ut.
+For more information on running ADCIRC and documentation, see the following links:
 
-[Link Example - this goes to Google](https://www.google.com)
+* [ADCIRC Wiki](https://wiki.adcirc.org/wiki/Main_Page)
+* [ADCIRC Web Page](https://adcirc.org/)
 
-## Header 2
+ADCIRC is available as a standalone app accesible via the [DesignSafe front-end](https://www.designsafe-ci.org/rw/workspace/#!/ADCIRC::Simulation).
 
-Euismod nisi porta lorem mollis aliquam ut. Tincidunt ornare massa eget egestas purus viverra accumsan in. Varius quam quisque id diam vel. Fermentum odio eu feugiat pretium nibh ipsum consequat nisl. Placerat duis ultricies lacus sed turpis tincidunt id aliquet risus. Condimentum vitae sapien pellentesque habitant morbi tristique senectus et netus. Egestas sed sed risus pretium quam vulputate. Posuere morbi leo urna molestie at elementum. Eget magna fermentum iaculis eu non diam. Nisl tincidunt eget nullam non nisi. Sit amet risus nullam eget felis eget nunc lobortis mattis.
+### Tapis
 
-### Header2 Subheading
+Tapis is the main API to control and access HPC resources with. For more resources and tutorials on how to use Tapis, see the following:
 
-In aliquam sem fringilla ut morbi. Interdum varius sit amet mattis vulputate enim nulla aliquet. Sit amet mattis vulputate enim nulla.  In egestas erat imperdiet sed euismod nisi porta lorem. Eget nulla facilisi etiam dignissim diam.  Facilisi cras fermentum odio eu feugiat. Velit aliquet sagittis id consectetur. Vel quam elementum pulvinar etiam.  Ut diam quam nulla porttitor massa id neque aliquam. Sodales ut etiam sit amet nisl.  Scelerisque varius morbi enim nunc faucibus a. Sit amet volutpat consequat mauris nunc. Et leo duis ut diam.
+* [Tapis CLI](https://tapis-cli.readthedocs.io/en/latest/contents.html)
+* [AgavePy](https://tacc-cloud.readthedocs.io/projects/agave/en/latest/)
+* [DesignSafe Webinar](https://www.youtube.com/watch?v=-_1lNWW8CAg&t=1854s&ab_channel=NHERIDesignSafe-CIMedia)
 
-*Add images to the folder img and use relative path to specify the location of the image.*   
+To initialize tapis in our jupyter notebook we use AgavePy. Relies on `tapis auth init --interactive` being run from a terminal first upon initializing your Jupyter server.
 
-![caption](img/mkdocs-template.png)
-> Use case template design
+![caption](img/TapisImage.png)
+> Initialize Tapis from within a shell in a jupyter session. A shell can be launched by going to File -> New -> Terminal.
 
+Once this is complete, you can now run from a code cell in your jupyter session the following to load your AgavePy credentials:
 
-## Header3
+```python
+from agavepy.agave import Agave
 
-Morbi tristique senectus et netus et. Tristique senectus et netus et malesuada fames.  Eu mi bibendum neque egestas congue quisque. Id consectetur purus ut faucibus pulvinar elementum integer enim. Nunc consequat interdum varius sit amet mattis vulputate enim nulla.  Porta nibh venenatis cras sed felis eget. Dui id ornare arcu odio ut sem nulla pharetra diam. Pellentesque habitant morbi tristique senectus et netus et. Commodo nulla facilisi nullam vehicula ipsum a arcu. Nisi porta lorem mollis aliquam ut porttitor leo.
-
-Numbered list 
-
-1. [numbered linked item](https://maps.google.com)
-2. second item
-3. third item
-
-### Header3 subheading
-
-Ac feugiat sed lectus vestibulum mattis ullamcorper. Et egestas quis ipsum suspendisse ultrices gravida dictum fusce ut. Scelerisque eu ultrices vitae auctor eu augue ut lectus arcu.  Imperdiet proin fermentum leo vel orci porta non pulvinar. Dictumst quisque sagittis purus sit amet. Aliquam purus sit amet luctus. Aliquet bibendum enim facilisis gravida neque convallis a cras. Orci porta non pulvinar neque laoreet suspendisse. Urna neque viverra justo nec ultrices dui.
-
-**Example Table**
-
-| Column 1 | Column 2 | Column 3 |
-|----------|----------|----------|
-| Stampede2| CPU      | 2017     |     
-| Frontera | CPU & GPU| 2019     |     
-
-Or use markdown table generator: [https://www.tablesgenerator.com/markdown_tables](https://www.tablesgenerator.com/markdown_tables)
-
-
-### Math
-
-To generate math equations in markdown.
-
-For inline mode formulas: $`a^2+b^2=c^2`$.
-
-For display mode formulas which appear on a separate line
-```math
-f(x) = \int_{-\infty}^\infty
-\hat f(\xi)\,e^{2 \pi i \xi x}
-\,d\xi
+ag = Agave.restore()
 ```
 
-### Code
+### Pylauncher
 
-``` python
-import tensorflow as tf
+[Pylauncher](https://github.com/TACC/pylauncher) is a parametric job launcher used for launching a collection of HPC jobs within one HPC job. By specifying a list of jobs to execute in either a CSV or json file, pylauncher manages resources on a given HPC job to execute all the jobs using the given nodes. Inputs for pylauncher look something like (for csv files, per line):
+
+```
+num_processes,<pre process command>;<main parallel command>;<post process command>
 ```
 
-Highlight specific lines of the code
+The pre-process and post-process commands are executed in serial, while the main command is executed in parallel using the appropriate number of processes. Note pre and post process commands should do light file management and movement and no computationally intensive tasks.
 
-``` python hl_lines="3 4"
-""" Bubble sort """
-def bubble_sort(items):
-    for i in range(len(items)):
-        for j in range(len(items) - 1 - i):
-            if items[j] > items[j + 1]:
-                items[j], items[j + 1] = items[j + 1], items[j]
+## Tapis Pylauncher App
+
+Overview of this section:
+
+* Getting the Appication
+* App Overview
+* Staging Files
+* Example Ensemble ADCIRC RUN
+
+### Accessing the Application
+
+Check out the application from the github page - [https://github.com/UT-CHG/tapis-pylauncher](https://github.com/UT-CHG/tapis-pylauncher) and deploy it using either the Tapis CLI or AgavePy (See documentation links above under Tapis section), or email cdelcastillo21@gmail.com for access to an already deployed version of the application (it is not a public application yet, so has to be shared explicitly with users).
+
+### Basic Application Overview
+
+The tapis-pylauncher application loops through iterations of calling pylauncher utility, using as input a file generated by a user defined generator shell script `generator.sh`. A simplified excerpt of this main execution loop is as follows:
+
+```bash
+# Main Execution Loop:
+#   - Call generator script.
+#   - Calls pylauncher on generated input file. Expected name = jobs_list.csv
+#   - Repeats until generator script returns no input file for pylauncher.
+ITER=1
+while :
+do
+  # Call generator if it exists script
+  if [ -e generator.sh ]
+  then
+    
+    ./generator.sh ${ITER} $SLURM_NPROCS $generator_args
+  fi
+
+  # If input file for pylauncher has been generated, then start pylauncher
+  if [ -e ${pylauncher_input} ]
+  then
+    python3 launch.py ${pylauncher_input} >> pylauncher.log
+  fi
+
+  ITER=$(( $ITER + 1 ))
+done
 ```
+
+Note how a generator script is not required, with a static pylauncher file, of input name determined as a job parameter `pylauncher_input`, being sufficient to run a single batch of jobs. 
+
+All input scripts and files for each parametric job should be zipped into a file and passed as an input to the pylauncher application. Note that these files shouldn't be too large and shouldn't contain data as tapis will be copying them around to stage and archive jobs. Data should ideally be pre-staged and not part of the zipped job inputs.
+
+### Staging Files 
+
+For large scale ensemble simulations, it is best to stage individual ADCIRC run files in a project directory that execution systems can access before-hand so that Tapis itself isn't doing the moving and staging of data. 
+
+The corresponding TACC base path to your project with a particular id can be found at `/corral-repl/projects/NHERI/projects/[id]/`. To find the ID for your project, you can just look at the URL of your project directory in designsafe:
+
+![caption](img/project_dir_2.png)
+> TX FEMA storms project directory. Note how the URL on top contains the Project ID corresponding to the path on corral that login nodes on TACC systems should have access to.
+
+From a login node then (assuming this is done on stampede2), the data can be staged onto a public directory on `/work` as follows. First we create a public directory in our workspace where the data will be staged:
+
+```bash
+(base) login2.stampede2(1020)$ cd $WORK
+(base) login2.stampede2(1022)$ cd ..
+(base) login2.stampede2(1023)$ ls
+frontera  lonestar  longhorn  ls6  maverick2  pub  singularity_cache  stampede2
+(base) login2.stampede2(1024)$ pwd
+/work2/06307/clos21
+(base) login2.stampede2(1026)$ chmod o+x
+(base) login2.stampede2(1027)$ mkdir -p pub
+(base) login2.stampede2(1028)$ chmod o+x pub
+(base) login2.stampede2(1029)$ cd pub
+(base) login2.stampede2(1030)$ mkdir -p adcirc/inputs/ShinnecockInlet/mesh/test
+```
+
+Next we copy the data from our project directory to the public work directory 
+
+```bash
+(base) login2.stampede2(1039)$ cp /corral-repl/projects/NHERI/projects/586025607221276180-242ac118-0001-012/ShinnecockInletMesh/* adcirc/inputs/ShinnecockInlet/mesh/test/
+```
+
+Finally we change the ownership of the files and all sub-directories where the data is staged to be publicly accessible by the TACC execution systems. Which we can check via the file permissions of the final directory we created with the staged data:
+
+
+```bash
+(base) login2.stampede2(1040)$ chmod -R a-x+rX adcirc
+(base) login2.stampede2(1042)$ cd adcirc/inputs/ShinnecockInlet/mesh/test
+(base) login2.stampede2(1043)$ pwd
+/work2/06307/clos21/pub/adcirc/inputs/ShinnecockInlet/mesh/test
+(base) login2.stampede2(1045)$ ls -lat
+total 360
+-rw-r--r-- 1 clos21 G-800588 341496 May 13 17:27 fort.14
+-rw-r--r-- 1 clos21 G-800588  15338 May 13 17:27 fort.15
+drwxr-xr-x 2 clos21 G-800588   4096 May 13 17:26 .
+drwxr-xr-x 4 clos21 G-800588   4096 May 13 17:24 ..
+```
+
+The directory `/work2/06307/clos21/pub/adcirc/inputs/ShinnecockInlet/mesh/test` now becomes the directory we can use in our pylauncher configurations and scripts to access the data to be used for the ensemble simulations. 
+
+### Example Ensemble Run: Shinnecock Inlet Test Grid Performance
+
+For an example of how to use the tapis-pylauncher application, we refer to the accompanying notebook in the [ADCIRC Use Case folder](https://www.designsafe-ci.org/data/browser/public/designsafe.storage.community/Use%20Case%20Products/ADCIRC) in the Community Data directory.
+
+The notebook goes over how to run ADCIRC on the [Shinnecock Inlet Test Grid](https://adcirc.org/home/documentation/example-problems/shinnecock-inlet-ny-with-tidal-forcing-example/). 
+
+![caption](img/si_mesh.png)
+> Shinnecock Inlet Test Grid. ADCIRC solves the Shallow Water Equations over a Triangular Mesh, depicted above.
+
+An ensemble of adcirc simulations using different amounts of parallel processes on the same grid is configured, and output from active and archived job runs is analyzed to produced bar plots of run-time versus number of processors used for the Shinneocock Inlet Grid.
+
+![caption](img/si_runtimes.png)
+> Total Runtime for ADCIRC on the Shinnecock Inlet grid pictured above using different number of processors on stampede2.
