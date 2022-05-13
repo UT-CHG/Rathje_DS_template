@@ -64,10 +64,6 @@ Overview of this section:
 * App Overview
 * Staging Files
 * Example Ensemble ADCIRC RUN
-  * Configuring
-  * Submitting and Monitoring
-  * Getting and visualizing output
-  * 
 
 ### Accessing the Application
 
@@ -164,4 +160,7 @@ The notebook goes over how to run ADCIRC on the [Shinnecock Inlet Test Grid](htt
 ![caption](img/si_mesh.png)
 > Shinnecock Inlet Test Grid. ADCIRC solves the Shallow Water Equations over a Triangular Mesh, depicted above.
 
-An ensemble of adcirc simulations using different amounts of parallel processes on the same simulation. Our goal is to see how the performance of this test grid scales with the number of processors used. 
+An ensemble of adcirc simulations using different amounts of parallel processes on the same grid is configured, and output from active and archived job runs is analyzed to produced bar plots of run-time versus number of processors used for the Shinneocock Inlet Grid.
+
+![caption](img/si_runtimes.png)
+> Total Runtime for ADCIRC on the Shinnecock Inlet grid pictured above using different number of processors on stampede2.
