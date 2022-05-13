@@ -108,7 +108,7 @@ For large scale ensemble simulations, it is best to stage individual ADCIRC run 
 
 The corresponding TACC base path to your project with a particular id can be found at `/corral-repl/projects/NHERI/projects/[id]/`. To find the ID for your project, you can just look at the URL of your project directory in designsafe:
 
-![caption](img/project_dir.png)
+![caption](img/project_dir_2.png)
 > TX FEMA storms project directory. Note how the URL on top contains the Project ID corresponding to the path on corral that login nodes on TACC systems should have access to.
 
 From a login node then (assuming this is done on stampede2), the data can be staged onto a public directory on `/work` as follows. First we create a public directory in our workspace where the data will be staged:
